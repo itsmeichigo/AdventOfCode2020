@@ -21,7 +21,7 @@ func productOfPair(sum: Int, input: [Int], sorted: Bool = false) -> Int {
 func productOfThree(sum: Int, input: [Int]) -> Int {
     let sortedInput = input.sorted()
     for index in 0..<sortedInput.count - 2 {
-        let subarray = Array(sortedInput.suffix(from: index))
+        let subarray = Array(sortedInput.suffix(from: index + 1))
         let expectedSum = sum - sortedInput[index]
         let product = productOfPair(sum: expectedSum, input: subarray, sorted: true)
         if product > -1 {
