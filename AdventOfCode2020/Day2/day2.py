@@ -1,6 +1,5 @@
 def count_valid_passwords(arr, func):
-    transform = [1 if func(x) else 0 for x in arr]
-    return sum(i for i in transform)
+    return sum([1 if func(x) else 0 for x in arr])
 
 def check_valid(pattern):
     min, max, char, password = parse(pattern)
