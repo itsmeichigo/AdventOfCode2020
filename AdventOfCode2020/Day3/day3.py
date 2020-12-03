@@ -1,15 +1,13 @@
 from functools import reduce
 
 def count_tree(input, right, down):
-    total_trees = 0
-    current_row, current_index = down, 0
+    total_trees, current_index = 0, 0
     
-    while current_row < len(input):
-        row = input[current_row]
+    for i in range(down, len(input), down):
+        row = input[i]
         current_index = (current_index + right) % len(row)
         if row[current_index] == "#":
             total_trees += 1
-        current_row += down
 
     return total_trees
 
