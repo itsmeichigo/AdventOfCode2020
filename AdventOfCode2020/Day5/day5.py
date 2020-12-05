@@ -7,7 +7,7 @@ def find_missing_seat(inputs):
     for i in range(len(all_seats) - 1):
         if all_seats[i] + 1 != all_seats[i+1]:
             return all_seats[i] + 1
-    return 0
+    return -1
 
 def get_seatid(input):
     row = decode_position("F", 128, input[:7])
