@@ -2,14 +2,10 @@ def count_total_yes(groups, count_method):
     return sum(count_method(x) for x in groups)
 
 def count_unique_answers(group):
-    return len(set(group.replace("\n", "")))
+    return len(set.union(*map(set, group.splitlines())))
 
 def count_same_answers(group):
-    people = group.splitlines()
-    current_set = set(people[0])
-    for i in range(1, len(people)):
-        current_set = current_set.intersection(set(people[i]))
-    return len(current_set)
+    return len(set.intersection(*map(set, group.splitlines())))
 
 file = open("data.txt")
 groups = file.read().split("\n\n")
