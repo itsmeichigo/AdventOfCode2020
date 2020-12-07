@@ -25,16 +25,11 @@ def find_contents(input, container, results, times):
             results.extend(times * v * [k])
             find_contents(input, k, results, times * v)
 
-def parse(rule): 
-    rule = re.sub(r"\s(bag)(s)?(\.)?", "", rule)
-    rule = re.sub("(contain no other)", ":", rule)
-    rule = re.sub(r"(contain\s)", ":", rule)
-    substrings = re.split(":", rule)
-    container = substrings[0].strip()
+def parse(rule):
+    container = re.match("(.+?) bags", rule).group(1)
     contents = {}
-    for x in re.split(r",\s", substrings[1]):
-        if len(x) > 2:
-            contents[x[2:]] = int(x[:1])
+    for i in re.findall("(\d+) (.+?) bag", rule):
+        contents[i[1]] = int(i[0])
     return {container: contents}
 
 file = open("data.txt")
