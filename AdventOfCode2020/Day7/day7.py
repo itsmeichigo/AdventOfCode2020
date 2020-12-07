@@ -5,25 +5,21 @@ def count_bags(rules, item, is_container):
     for x in rules:
         input.update(parse(x))
 
-    results = []
     if is_container:
-        find_contents(input, item, results, 1)
-        return len(results)
+        return count_contents(input, item)
     else:
-        find_containers(input, item, results)
-        return len(set(results))
+        return sum(1 for x in input.keys() if has_item(input, x, item) and x != item)
 
-def find_containers(input, content, results):
-    immediate_containers = [x for x in input.keys() if content in input[x]]
-    for x in immediate_containers:
-        results.append(x)
-        find_containers(input, x, results)
+def has_item(input, container, item):
+    if container == item:
+        return True
+    return any([has_item(input, x, item) for x in input[container]])
 
-def find_contents(input, container, results, times):
-    if container in input:
-        for k, v in input[container].items():
-            results.extend(times * v * [k])
-            find_contents(input, k, results, times * v)
+def count_contents(input, container):
+    total = 0
+    for k, v in input[container].items():
+        total += (v + v * count_contents(input, k))
+    return total
 
 def parse(rule):
     container = re.match("(.+?) bags", rule).group(1)
