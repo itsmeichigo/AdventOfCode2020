@@ -12,11 +12,14 @@ def check_valid(num, pre_arr, pre_length):
 
 def find_encryption_weakness(numbers, target):
     current_arr = []
+    current_sum = 0
     for num in numbers:
         current_arr.append(num)
-        while sum(i for i in current_arr) > target:
+        current_sum += num
+        while current_sum > target:
+            current_sum -= current_arr[0]
             current_arr = current_arr[1:]
-        if sum(i for i in current_arr) == target:
+        if current_sum == target:
             break
 
     return min(current_arr) + max(current_arr)
