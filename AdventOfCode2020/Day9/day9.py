@@ -11,18 +11,19 @@ def check_valid(num, pre_arr):
     return False
 
 def find_encryption_weakness(numbers, target):
-    current_arr = []
-    current_sum = 0
-    for num in numbers:
-        current_arr.append(num)
-        current_sum += num
-        while current_sum > target:
-            current_sum -= current_arr[0]
-            current_arr = current_arr[1:]
+    start, end = 0, 0
+    current_sum = numbers[end]
+    while end < len(numbers) - 1:
+        end += 1
+        current_sum += numbers[end]
+        while current_sum > target and start < end - 1:
+            current_sum -= numbers[start]
+            start += 1
         if current_sum == target:
-            break
-
-    return min(current_arr) + max(current_arr)
+            current_arr = numbers[start:end+1]
+            return min(current_arr) + max(current_arr)
+    return None
+    
 
 with open("data.txt") as file:
     numbers = [int(x) for x in file.read().splitlines()]
