@@ -1,10 +1,10 @@
 def find_odd_one_out(numbers, pre_length):
     for i in range(pre_length, len(numbers)):
-        if not check_valid(numbers[i], numbers[i - pre_length:i], pre_length):
+        if not check_valid(numbers[i], numbers[i - pre_length:i]):
             return numbers[i]
     return None
 
-def check_valid(num, pre_arr, pre_length):
+def check_valid(num, pre_arr):
     for x in pre_arr:
         if (num - x) in pre_arr:
             return True
