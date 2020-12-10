@@ -14,7 +14,7 @@ def count_differences(adapters):
 
 def count_arrangements(adapters):
     adapters.sort()
-    complete_list = [0] + list(set(adapters)) + [max(adapters) + 3]
+    complete_list = [0] + list(set(adapters)) + [adapters[-1] + 3]
     times = 1
     left, right = 0, 0
     while left < len(complete_list) - 1 and right < len(complete_list) - 1:
@@ -29,6 +29,7 @@ def count_combination(adapters):
     if len(adapters) == 3:
         return 2
     elif len(adapters) > 3:
+        # full list + (full list minus 1 of the middle numbers) + (full list minus combination of any 2 middle numbers)
         result = 1 + len(adapters) - 2 + int(factorial(len(adapters) - 2) / 2)
         return result
     return 1
