@@ -4,8 +4,8 @@ def count_final_seats(original, max_occupied, immediate_adj_only):
     while True:
         changes, original = apply_rules(original, max_occupied, immediate_adj_only)
         if changes == 0:
-            return len([x for x in "".join(["".join(x) for x in original]) if x == "#"])
-    return changes
+            break
+    return len([x for x in "".join(["".join(x) for x in original]) if x == "#"])
 
 def apply_rules(original, max_occupied, immediate_adj_only):
     updated = deepcopy(original)
@@ -33,7 +33,6 @@ def count_vacant_adjacents(seats, i, j, immediate_only):
                     adjacents += 1
                     break
     return adjacents
-
 
 with open("data.txt") as file:
     seats = [list(x) for x in file.read().splitlines()]
