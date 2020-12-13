@@ -8,16 +8,14 @@ def find_subsequent_timestamp(buses):
     for i, bus in enumerate(buses):
         while (time + i) % bus: 
             time += period
-            print(time)
         period *= bus
-        print(period)
     return time
 
 def test_input():    
     pickup, buses = parse_input("""939
 7,13,x,x,59,x,31,19""")
     assert(find_earliest_bus(pickup, buses)) == 295
-    # assert(find_subsequent_timestamp(buses)) == 1068781
+    assert(find_subsequent_timestamp(buses)) == 1068781
 
 def parse_input(str):
     input = str.splitlines()
