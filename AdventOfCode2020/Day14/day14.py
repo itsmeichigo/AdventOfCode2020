@@ -9,7 +9,7 @@ def find_sum_values_v1(rules):
             for j, char in enumerate(mask):
                 if char != "X": updated[j] = char
             memory_map[m[0]] = int("".join(updated), 2)
-    return sum(v for v in memory_map.values())
+    return sum(memory_map.values())
 
 def find_sum_values_v2(rules):
     memory_map = {}
@@ -20,7 +20,7 @@ def find_sum_values_v2(rules):
             raw = list(format(int(m[0]), "036b"))
             for j, char in enumerate(mask):
                 if char != "0": raw[j] = char
-                
+
             for o in options:
                 o_chars = list(o)
                 copy = raw.copy()
@@ -29,7 +29,7 @@ def find_sum_values_v2(rules):
                         copy[k] = o_chars[0]
                         o_chars = o_chars[1:]
                 memory_map[int("".join(copy), 2)] = int(m[1])
-    return sum(v for v in memory_map.values())
+    return sum(memory_map.values())
         
 def parse_rule(r):
     if r[0:4] != "mask": r = "mask" + r
@@ -57,5 +57,3 @@ if __name__ == "__main__":
         rules = re.split(r"\nmask", file.read())
         print(find_sum_values_v1(rules))
         print(find_sum_values_v2(rules))
-    
-    
