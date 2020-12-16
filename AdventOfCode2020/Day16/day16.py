@@ -10,8 +10,26 @@ def check_nearby_tickets_error(tickets, ranges):
     return error_rate
 
 def decode_fields(tickets, ranges):
-    
-    return []
+    valid_tickets = []
+    for t in tickets:
+        fields = [check_valid_fields(num, ranges) for num in t]
+        if len([f for f in fields if len(f) == 0]) == 0:
+            valid_tickets.append(fields)
+    intersections = [set.intersection(*map(set, [t[i] for t in valid_tickets])) for i in range(len(ranges))]
+    fields = []
+    for i, v in enumerate(intersections):
+        if len(v) == 1: 
+            fields.append(list(v)[0])
+            continue
+        options = v - set(fields)
+        j = i + 1
+        while j < len(intersections) and len(options) > 1:
+            difference = options - intersections[j]
+            if len(difference) > 0:
+                options = difference
+            j += 1
+        fields.append(list(options)[0])
+    return fields
 
 def check_valid_fields(num, ranges):
     valid = []
@@ -48,8 +66,7 @@ nearby tickets:
 15,1,5
 5,14,9"""
     ranges, mine, tickets = parse_input(test2)
-    fields = decode_fields(tickets, ranges)
-    # assert(decode_fields(tickets, ranges)) == ["row", "class", "seat"]
+    assert(decode_fields(tickets, ranges)) == ["row", "class", "seat"]
 
 def parse_input(input):
     rules, my_ticket, nearby = input.split("\n\n")
@@ -66,4 +83,9 @@ if __name__ == "__main__":
     with open("data.txt") as file:
         ranges, mine, tickets = parse_input(file.read())
         print(check_nearby_tickets_error(tickets, ranges))
-        # fields = decode_fields(tickets, ranges)
+        fields = list(decode_fields(tickets, ranges))
+        product = 1
+        for i, field in enumerate(fields):
+            if field.startswith("departure"):
+                product *= mine[i]
+        print(product)
