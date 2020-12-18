@@ -10,7 +10,6 @@ def calculate(expression, advanced):
         try:
             found = expression.index("(")
             expression = replace_bracket_content(expression, found, advanced)
-            # print(expression)
         except:
             break
 
