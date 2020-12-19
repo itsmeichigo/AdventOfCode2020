@@ -1,19 +1,16 @@
 import re
 
-def count_match(input):
+def count_match(input, starting):
     rules, messages = input.split("\n\n")
-    pattern = re.compile(build_regex_pattern(rules))
+    pattern = re.compile(build_regex_pattern(rules, starting))
     return sum(1 for m in messages.splitlines() if pattern.match(m))
 
-def build_regex_pattern(rules):
-    pattern = "^"
+def build_regex_pattern(rules, starting):
     pattern_map = {}
     for l in rules.splitlines():
         key, content = re.match(r"(\d+): (.+)", l).group(1,2)
         pattern_map[key] = content
-    for rule in pattern_map["0"].split():
-        pattern += find_rule_content(pattern_map, rule)
-    return pattern + "$"
+    return "^" + find_rule_content(pattern_map, starting) + "$"
 
 def find_rule_content(pattern_map, rule):
     if re.compile(r"\"([ab]+)\"").match(pattern_map[rule]): # e.g "a"
@@ -42,9 +39,9 @@ bababa
 abbbab
 aaabbb
 aaaabbb"""
-    assert(count_match(test1)) == 2
+    assert(count_match(test1, "0")) == 2
 
 if __name__ == "__main__":
     test_input()
     with open("data.txt") as file:
-        print(count_match(file.read()))
+        print(count_match(file.read(), "0"))
