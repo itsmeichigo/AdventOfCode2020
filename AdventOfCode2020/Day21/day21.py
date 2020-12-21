@@ -1,6 +1,6 @@
 import re
 
-def find_nonallergens(input):
+def assess_allergens(input):
     data = {}
     ing_count = {}
     for line in input.splitlines():
@@ -13,16 +13,28 @@ def find_nonallergens(input):
             else: data[al] = set.intersection(data[al], set(ings.split()))
     
     safe = set(ing_count.keys()) - set.union(*map(set, data.values()))
-    return sum(v for k, v in ing_count.items() if k in safe)
+    safe_count = sum(v for k, v in ing_count.items() if k in safe)
+    allergen_map = {}
+    while len(allergen_map) < len(data):
+        for k, v in data.items():
+            if len(v) == 1:
+                ingredient = list(v)[0]
+                allergen_map[k] = ingredient
+                for other in data:
+                    if ingredient in data[other]:
+                        data[other].remove(ingredient)
+                        
+    allergens = ",".join([allergen_map[k] for k in sorted(list(allergen_map.keys()))])
+    return safe_count, allergens
 
 def test_input():
     test1 = """mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
 trh fvjkl sbzzf mxmxvkd (contains dairy)
 sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)"""
-    assert(find_nonallergens(test1)) == 5
+    assert(assess_allergens(test1)) == (5, "mxmxvkd,sqjhc,fvjkl")
 
 if __name__ == "__main__":
     test_input()
     with open("data.txt") as file:
-        print(find_nonallergens(file.read()))
+        print(assess_allergens(file.read()))
