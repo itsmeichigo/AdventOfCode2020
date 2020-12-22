@@ -31,11 +31,6 @@ def play_recursive_combat(deck1, deck2):
             else: deck2.extend([card2, card1])
     winner = 1 if len(deck1) > 0 else 2
     return max(calculate_score(deck1), calculate_score(deck2)), winner
-    
-def swap_cards(winning, losing):
-    winning = winning[1:] + [winning[0], losing[0]]
-    losing = losing[1:]
-    return winning, losing
 
 def test_input():
     with open("test.txt") as file:
