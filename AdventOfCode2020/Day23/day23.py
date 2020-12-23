@@ -1,39 +1,53 @@
-def play_cups(starting, rounds):
-    cups = [int(c) for c in list(starting)]
-    current_round = 0
-    while current_round < rounds:
-        cups = move_next_round(cups)
-        current_round += 1
+def play_cups(starting, rounds, p2=False):
+    numbers = [int(c) for c in list(starting)]
+    if p2: numbers += [i for i in range(10, 1000001)]
 
-    # part 1
-    one_index = cups.index(1)
+    next = dict(zip(numbers, (numbers[1:] + [numbers[0]])))
+
+    round = 0
+    current_cup = numbers[0]
+    min_num, max_num = min(numbers), max(numbers)
+    while round < rounds:
+        move_next_round(next, current_cup, min_num, max_num)
+        round += 1
+        # print("Round ", round, current_cup)
+        current_cup = next[current_cup]
+
+    return get_cups_labels(next, 1, True)
+
+def get_cups_labels(next, cup, exclusive=False):
     result = []
-    if one_index == len(cups) - 1: result = cups[:len(cups)]
-    else: result = cups[(one_index + 1):] + cups[:one_index]
-    return "".join([str(i) for i in result])
+    if not exclusive: result.append(cup)
+    current = next[cup]
+    while True:
+        result.append(current)
+        current = next[current]
+        if current == cup: break
+    return result
+
+def move_next_round(next, current_cup, min_num, max_num):
+    c1 = next[current_cup]
+    c2 = next[c1]
+    c3 = next[c2]
     
-def move_next_round(cups):
-    current = cups[0]
-    pickups = cups[1:4]
-    destination = current
+    destination = current_cup
     while True:
         destination -= 1
-        if destination < min(cups):
-            destination = max(cups)
-        if destination not in pickups: break
-    # remove pickups
-    new_cups = [cups[0]] + cups[4:]
-    # get index of destination
-    des_index = new_cups.index(destination)
-    # insert pickups after destination
-    new_cups = new_cups[:des_index+1] + pickups + new_cups[(des_index+1):]
-    new_current_index = new_cups.index(current)
-    # if current not at end of list, get following items and preceeding items
-    # to make sure that the next current item is at index 0 of list
-    if new_current_index < len(cups) - 1: 
-        new_cups = new_cups[(new_current_index + 1):] + new_cups[:(new_current_index + 1)]
-    return new_cups
+        if destination < min_num:
+            destination = max_num
+        if destination not in [c1, c2, c3]: break
+    # print(get_cups_labels(next, current_cup), c1, c2, c3, destination)
+    
+    next[current_cup] = next[c3]
+    old = next[destination]
+    next[destination] = c1
+    next[c3] = old
 
-assert(play_cups("389125467", 10)) == "92658374"
-assert(play_cups("389125467", 100)) == "67384529"
-print(play_cups("789465123", 100))
+# part 1
+assert("".join([str(i) for i in play_cups("389125467", 10)])) == "92658374"
+assert("".join([str(i) for i in play_cups("389125467", 100)])) == "67384529"
+print("".join([str(i) for i in play_cups("789465123", 100)]))
+
+#part 2
+result = play_cups("789465123", 10000000, True)
+print(int(result[0]) * int(result[1])) 
