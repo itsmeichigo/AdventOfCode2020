@@ -15,14 +15,14 @@ def play_cups(starting, rounds, p2=False):
 
     return get_cups_labels(next, 1, True)
 
-def get_cups_labels(next, cup, exclusive=False):
+def get_cups_labels(next, starting, exclusive=False):
     result = []
-    if not exclusive: result.append(cup)
-    current = next[cup]
+    if not exclusive: result.append(starting)
+    current = next[starting]
     while True:
         result.append(current)
         current = next[current]
-        if current == cup: break
+        if current == starting: break
     return result
 
 def move_next_round(next, current_cup, min_num, max_num):
