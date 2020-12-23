@@ -28,10 +28,10 @@ def move_next_round(cups):
     # insert pickups after destination
     new_cups = new_cups[:des_index+1] + pickups + new_cups[(des_index+1):]
     new_current_index = new_cups.index(current)
-    # if current not at end of list, get following items and add reverse of preceeding items
+    # if current not at end of list, get following items and preceeding items
     # to make sure that the next current item is at index 0 of list
     if new_current_index < len(cups) - 1: 
-        new_cups = new_cups[(new_current_index + 1):] + (new_cups[:(new_current_index + 1)])[::-1]
+        new_cups = new_cups[(new_current_index + 1):] + new_cups[:(new_current_index + 1)]
     return new_cups
 
 assert(play_cups("389125467", 10)) == "92658374"
