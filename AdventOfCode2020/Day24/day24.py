@@ -21,39 +21,29 @@ def parse_directions(input):
     return directions
 
 def find_neighbors(tile):
-    neighbors = []
-    for v in direction_map.values():
-        new_tile = tuple(sum(x) for x in zip(tile, v))
-        neighbors.append(new_tile)
-    return neighbors
-
-def count_black_tiles(tile_map):
-    return sum([1 for v in tile_map.values() if v])
+    return [tuple(sum(x) for x in zip(tile, v)) for v in direction_map.values()]
 
 def layout_lobby(input):
-    tile_map = {}
+    black_tiles = set()
     directions = input.splitlines()
     for d in directions:
         tile = find_final_tile(d)
-        if tile not in tile_map: tile_map[tile] = True
-        else: tile_map[tile] = not tile_map[tile]
-    initial_black_count = count_black_tiles(tile_map)
+        if tile not in black_tiles: black_tiles.add(tile)
+        else: black_tiles.remove(tile)
+    initial_black_count = len(black_tiles)
 
     for _ in range(100):
-        new_map = {}
-        for tile in list(tile_map):
+        neighbors = {}
+        for tile in black_tiles:
             for n in find_neighbors(tile):
-                if n not in tile_map: tile_map[n] = False
-        for tile, is_black in tile_map.items():
-            black_neighbors = len([n for n in find_neighbors(tile) if tile_map.get(n, False)])
-            if is_black and (black_neighbors == 0 or black_neighbors > 2):
-                new_map[tile] = False
-            elif not is_black and black_neighbors == 2:
-                new_map[tile] = True
-            else: new_map[tile] = is_black
-        tile_map = new_map
+                if n in neighbors: neighbors[n] += 1
+                else: neighbors[n] = 1
+        black_tiles = set(t for t, v in neighbors.items() 
+            if v == 2 or 
+            t in black_tiles and v == 1
+        )
 
-    day100_black_count = count_black_tiles(tile_map)
+    day100_black_count = len(black_tiles)
     return initial_black_count, day100_black_count
 
 if __name__ == "__main__":

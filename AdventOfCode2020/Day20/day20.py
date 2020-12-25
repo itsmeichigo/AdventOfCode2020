@@ -102,9 +102,9 @@ def count_all_monsters(lines, monster_lines):
     return total
 
 def find_sea_monster(lines, patterns):
-    total, x, y = 0, 0, 0
-    while x < len(lines[0]) - len(patterns[0]) + 1:
-        while y < len(lines) - len(patterns) + 1:
+    total = 0
+    for x in range(len(lines[0]) - len(patterns[0]) + 1):
+        for y in range(len(lines) - len(patterns) + 1):
             match = True
             match_lines = []
             for i in range(len(patterns)):
@@ -117,9 +117,6 @@ def find_sea_monster(lines, patterns):
                 total += 1
                 print("Found monster at coordinate: ", x, y)
                 print("\n".join(match_lines))
-            y += 1
-        x += 1
-        y = 0
     return total
 
 def assemble_image(tiles, corners) -> list:
