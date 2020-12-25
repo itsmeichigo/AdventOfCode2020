@@ -17,15 +17,14 @@ def parse_initial_cubes(input, dimension):
     return active_cubes
 
 def process_cycle(active, dimension):
-    new_set, neighbors = set(), {}
+    neighbors = {}
     for cube in active:
         for n in find_neighbors(list(cube), dimension):
             if n in neighbors: neighbors[n] += 1
             else: neighbors[n] = 1
-    for cube, count in neighbors.items():
-        if (cube not in active and count == 3) or (cube in active and count in [2,3]):
-            new_set.add(cube)
-    return new_set
+    return set(cube for cube, count in neighbors.items()
+                if (cube not in active and count == 3) or
+                (cube in active and count in [2,3]))
         
 def count_active(input, count, dimension):
     active_cubes = parse_initial_cubes(input, dimension)
