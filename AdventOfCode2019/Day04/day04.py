@@ -1,11 +1,9 @@
-from re import finditer
-
 def password_count(input, p2):
     r_min, r_max = [int(i) for i in input.split("-")]
     return sum(1 for i in range(r_min, r_max+1) if check_valid(str(i), p2))
     
 def check_valid(password, p2):
-    if password != "".join(sorted(list(password))):
+    if not all(password[i] <= password[i+1] for i in range(len(password)-1)):
         return False
     counts = [password.count(c) for c in set(password)]
     if p2:
