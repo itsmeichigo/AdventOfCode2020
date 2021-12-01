@@ -5,7 +5,7 @@ def num_of_increases(depths):
         if previous and i > previous:
             count += 1
         previous = i
-    return count - 1
+    return count
 
 def sliding_window_measurements(depths):
     windows = []
