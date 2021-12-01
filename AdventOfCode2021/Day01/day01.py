@@ -19,9 +19,16 @@ def sliding_window_measurements(depths):
         current_index += 1
     return windows
 
+with open("test.txt") as file:
+    input = file.read()
+    depths = [int(i) for i in input.splitlines()]
+
+    assert num_of_increases(depths) == 7
+    assert num_of_increases(sliding_window_measurements(depths)) == 5
 
 with open("data.txt") as file:
     input = file.read()
     depths = [int(i) for i in input.splitlines()]
+
     print(num_of_increases(depths))
     print(num_of_increases(sliding_window_measurements(depths)))
