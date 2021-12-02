@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 def parse_input(file_name) -> List[str]:
     with open(file_name) as file:
