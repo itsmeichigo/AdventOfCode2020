@@ -1,30 +1,36 @@
-from typing import List, Tuple
+from typing import List, Dict
 
 def parse_input(file_name) -> List[str]:
     with open(file_name) as file:
         return file.read().splitlines()
 
-def calculate_statistics(input) -> Tuple[int, int]:
-    most_common_bits, least_common_bits = calculate_bits(input)
-    power_consumption = int("".join(most_common_bits), 2) * int("".join(least_common_bits), 2)
- 
+def calculate_power_consumption(input) -> int:
+    gamma_rate = "".join(get_most_common_bits(input))
+    epsilon_rate = "".join(get_least_common_bits(input))
+    return int(gamma_rate, 2) * int(epsilon_rate, 2)
+
+def calculate_life_support_rating(input) -> int:
     oxygen_generator_rating = filter_by_bit_criteria(input, True)
     co2_scrubber_rating = filter_by_bit_criteria(input, False)
-    life_support_rating = int(oxygen_generator_rating, 2) * int(co2_scrubber_rating, 2)
-    return (power_consumption, life_support_rating)
+    return int(oxygen_generator_rating, 2) * int(co2_scrubber_rating, 2)
 
 def filter_by_bit_criteria(input, is_most_common, current_index=0) -> str:
     if len(input) == 1:
         return input[0]
     candidates = []
-    most_common_bits, least_common_bits = calculate_bits(input)
-    criteria = most_common_bits if is_most_common else least_common_bits
+    criteria = get_most_common_bits(input) if is_most_common else get_least_common_bits(input)
     for line in input:
         if line[current_index] == criteria[current_index]:
             candidates.append(line)
     return filter_by_bit_criteria(candidates, is_most_common, current_index + 1)
 
-def calculate_bits(input):
+def get_most_common_bits(input) -> List[str]:
+    return ["1" if bit["1"] >= bit["0"] else "0" for bit in calculate_bits(input)]
+
+def get_least_common_bits(input) -> List[str]:
+    return ["1" if bit["1"] < bit["0"] else "0" for bit in calculate_bits(input)]
+
+def calculate_bits(input) -> List[Dict]:
     bit_count = [{"0": 0, "1": 0} for i in range(len(input[0]))]
     for line in input:
         for i in range(len(line)):
@@ -32,14 +38,12 @@ def calculate_bits(input):
             if line[i] == "0": current_count["0"] += 1
             elif line[i] == "1": current_count["1"] += 1
             bit_count[i] = current_count
-    most_common_bits = ["1" if bit["1"] >= bit["0"] else "0" for bit in bit_count]
-    least_common_bits = ["1" if bit["1"] < bit["0"] else "0" for bit in bit_count]
-    return (most_common_bits, least_common_bits)
+    return bit_count
 
 test_input = parse_input("test.txt")
-assert calculate_statistics(test_input) == (198, 230)
+assert calculate_power_consumption(test_input) == 198
+assert calculate_life_support_rating(test_input) == 230
 
 real_input = parse_input("data.txt")
-power_consumption, life_support_rating = calculate_statistics(real_input)
-print("Part 1: ", power_consumption)
-print("Part 2:", life_support_rating)
+print("Part 1: ", calculate_power_consumption(real_input) )
+print("Part 2:", calculate_life_support_rating(real_input))
