@@ -5,9 +5,9 @@ def parse_input(file_name) -> List[str]:
         return file.read().splitlines()
 
 def calculate_power_consumption(input) -> int:
-    gamma_rate = "".join(calculate_bits(input, True))
-    epsilon_rate = "".join(calculate_bits(input, False))
-    return int(gamma_rate, 2) * int(epsilon_rate, 2)
+    gamma_rate = [get_outstanding_bit(input, True, i) for i in range(len(input[0]))]
+    epsilon_rate = [get_outstanding_bit(input, False, i) for i in range(len(input[0]))]
+    return int("".join(gamma_rate), 2) * int("".join(epsilon_rate), 2)
 
 def calculate_life_support_rating(input) -> int:
     oxygen_generator_rating = filter_by_bit_criteria(input, True)
@@ -18,24 +18,20 @@ def filter_by_bit_criteria(input, is_most_common, current_index=0) -> str:
     if len(input) == 1:
         return input[0]
     candidates = []
-    criteria = calculate_bits(input, is_most_common)
     for line in input:
-        if line[current_index] == criteria[current_index]:
+        if line[current_index] == get_outstanding_bit(input, is_most_common, current_index):
             candidates.append(line)
     return filter_by_bit_criteria(candidates, is_most_common, current_index + 1) 
 
-def calculate_bits(input, is_most_common) -> List[str]:
-    bit_count = [{"0": 0, "1": 0} for i in range(len(input[0]))]
+def get_outstanding_bit(input, is_most_common, index) -> str:
+    ones, zeros = 0, 0
     for line in input:
-        for i in range(len(line)):
-            current_count = bit_count[i]
-            if line[i] == "0": current_count["0"] += 1
-            elif line[i] == "1": current_count["1"] += 1
-            bit_count[i] = current_count
-    if is_most_common:
-        return ["1" if bit["1"] >= bit["0"] else "0" for bit in bit_count]
+        if line[index] == "0": zeros += 1
+        else: ones += 1
+    if is_most_common: 
+        return "1" if ones >= zeros else "0"
     else:
-        return ["1" if bit["1"] < bit["0"] else "0" for bit in bit_count]
+        return "1" if ones < zeros else "0"
 
 test_input = parse_input("test.txt")
 assert calculate_power_consumption(test_input) == 198
