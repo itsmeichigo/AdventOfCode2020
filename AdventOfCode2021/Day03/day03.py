@@ -5,8 +5,8 @@ def parse_input(file_name) -> List[str]:
         return file.read().splitlines()
 
 def calculate_power_consumption(input) -> int:
-    gamma_rate = "".join(get_most_common_bits(input))
-    epsilon_rate = "".join(get_least_common_bits(input))
+    gamma_rate = "".join(calculate_bits(input, True))
+    epsilon_rate = "".join(calculate_bits(input, False))
     return int(gamma_rate, 2) * int(epsilon_rate, 2)
 
 def calculate_life_support_rating(input) -> int:
@@ -18,19 +18,13 @@ def filter_by_bit_criteria(input, is_most_common, current_index=0) -> str:
     if len(input) == 1:
         return input[0]
     candidates = []
-    criteria = get_most_common_bits(input) if is_most_common else get_least_common_bits(input)
+    criteria = calculate_bits(input, is_most_common)
     for line in input:
         if line[current_index] == criteria[current_index]:
             candidates.append(line)
-    return filter_by_bit_criteria(candidates, is_most_common, current_index + 1)
+    return filter_by_bit_criteria(candidates, is_most_common, current_index + 1) 
 
-def get_most_common_bits(input) -> List[str]:
-    return ["1" if bit["1"] >= bit["0"] else "0" for bit in calculate_bits(input)]
-
-def get_least_common_bits(input) -> List[str]:
-    return ["1" if bit["1"] < bit["0"] else "0" for bit in calculate_bits(input)]
-
-def calculate_bits(input) -> List[Dict]:
+def calculate_bits(input, is_most_common) -> List[str]:
     bit_count = [{"0": 0, "1": 0} for i in range(len(input[0]))]
     for line in input:
         for i in range(len(line)):
@@ -38,7 +32,10 @@ def calculate_bits(input) -> List[Dict]:
             if line[i] == "0": current_count["0"] += 1
             elif line[i] == "1": current_count["1"] += 1
             bit_count[i] = current_count
-    return bit_count
+    if is_most_common:
+        return ["1" if bit["1"] >= bit["0"] else "0" for bit in bit_count]
+    else:
+        return ["1" if bit["1"] < bit["0"] else "0" for bit in bit_count]
 
 test_input = parse_input("test.txt")
 assert calculate_power_consumption(test_input) == 198
