@@ -15,12 +15,13 @@ def parse_input(file_name) -> Tuple[List[int], List[List[List[int]]]]:
             sanatized_boards.append(lines)
         return numbers, sanatized_boards
 
-def play_bingo(numbers, boards) -> int:
+def play_bingo(numbers, boards, find_first_board=True) -> int:
     number_of_lines = len(boards[0])
     number_of_numbers_per_line = len(boards[0][0])
     board_rows = [[[] for i in range(number_of_lines)] for board in boards]
     board_columns = [[[] for i in range(number_of_numbers_per_line)] for board in boards]
     unmarked_numbers = [list(chain(*board)) for board in boards]
+    complete_count = [0 for board in boards]
     for number in numbers:
         for i in range(len(boards)):
             board = boards[i]
@@ -34,11 +35,19 @@ def play_bingo(numbers, boards) -> int:
                         index = unmarked_numbers[i].index(number)
                         unmarked_numbers[i].pop(index)
                     if len(board_rows[i][line_index]) == number_of_numbers_per_line or len(board_columns[i][column_index]) == number_of_lines:
-                        return sum(unmarked_numbers[i]) * number
+                        current_result = sum(unmarked_numbers[i]) * number
+                        if find_first_board:
+                            return current_result
+                        else:
+                            complete_count[i] += 1
+                            if 0 not in complete_count:
+                                return current_result
     return 0
 
 test_numbers, test_boards = parse_input("test.txt")
 assert play_bingo(test_numbers, test_boards) == 4512
+assert play_bingo(test_numbers, test_boards, find_first_board=False) == 1924
 
 numbers, boards = parse_input("data.txt")
 print("Part 1: ", play_bingo(numbers, boards))
+print("Part 2: ", play_bingo(numbers, boards, find_first_board=False))
