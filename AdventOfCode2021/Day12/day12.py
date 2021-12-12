@@ -3,16 +3,14 @@ def parse_input(file_name):
         subpaths = {}
         for line in file.read().splitlines():
             origin, destiny = line.split("-")
-            if origin in subpaths:
+            if destiny != "start": # ignore start as destiny
+                if origin not in subpaths:
+                    subpaths[origin] = []
                 subpaths[origin].append(destiny)
-            else:
-                subpaths[origin] = [destiny]
-            if destiny == "end" or origin == "start":
-                continue # do not add reverse path for start and end.
-            if destiny in subpaths:
+            if destiny != "end" and origin != "start":
+                if destiny not in subpaths:
+                    subpaths[destiny] = []
                 subpaths[destiny].append(origin)
-            else:
-                subpaths[destiny] = [origin]
         return subpaths
 
 def count_paths(input, allows_visiting_twice) -> int:
