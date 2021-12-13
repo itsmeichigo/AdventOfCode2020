@@ -30,8 +30,7 @@ def calculate_lava_tubes(input) -> Tuple[int, int]:
                 if input[x][y] == 9: in_basin[x][y] = False
                 else:
                     in_basin[x][y] = True
-                    basin = []
-                    basin.append(input[x][y])
+                    basin = [input[x][y]]
                     find_basin(x, y, adjacents, in_basin, basin)
                     basins.append(basin)
     sizes = [len(basin) for basin in basins]
