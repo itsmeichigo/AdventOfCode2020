@@ -4,18 +4,22 @@ def parse_input(file_name):
         rule_map = {}
         for rule in rules.splitlines():
             pair, element = rule.split(" -> ")
-            rule_map[pair] = element
+            rule_map[pair] = pair[0] + element + pair[1]
         return (template, rule_map)
 
 def execute_insertion(template, rules, step_count) -> str:
-    current, updated = template, template
+    current = template
     for _ in range(step_count):
-        added_count = 0
+        new_groups = []
         for i in range(len(current) - 1):
             substring = current[i:i+2]
             if substring in rules:
-                updated = updated[:i+1+added_count] + rules[substring] + updated[i+1+added_count:]
-                added_count += 1
+                new_groups.append(rules[substring])
+        updated = ""
+        for group in new_groups:
+            if len(updated) == 0: updated = group
+            else:
+                updated = updated[:-1] + group
         current = updated
     return current
 
