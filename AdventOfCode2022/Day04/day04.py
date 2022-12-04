@@ -11,7 +11,7 @@ def check_subset(pair):
 
 def check_overlap(pair):
     range1, range2 = get_ranges(pair)
-    return len(range1 & range2) > 0 or len(range2 & range1) > 0
+    return len(range1 & range2) > 0
 
 with open("input.txt") as file:
     pairs = [line.split(",") for line in file.readlines()]
