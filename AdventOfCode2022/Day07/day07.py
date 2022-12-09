@@ -45,12 +45,10 @@ with open("input.txt") as file:
     root_size = sizes[0]
     unused_space = 70_000_000 - root_size
     minimum_needed_space = 30_000_000 - unused_space
-    print(minimum_needed_space)
     sizes.sort()
     index, found = 0, 0
-    while index < len(sizes):
-        if sizes[index] >= minimum_needed_space:
-            found = sizes[index]
+    for size in sizes:
+        if size >= minimum_needed_space:
+            found = size
             break
-        index += 1
     print(found)
