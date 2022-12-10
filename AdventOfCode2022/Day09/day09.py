@@ -45,5 +45,5 @@ def move_tail(head, tail):
 
 with open("input.txt") as file:
     steps = [l.split(" ") for l in file.read().splitlines()]
-    # print(len(move_knots(steps, 1)))
+    print(len(move_knots(steps, 1)))
     print(len(move_knots(steps, 9)))
